@@ -1,0 +1,18 @@
+version: "3.7"
+
+services:
+  news_api:
+    build:
+      context: .
+    container_name: news_api
+    ports: 
+      - "3011:3000"
+    entrypoint: npm run start
+    networks:
+      - news
+networks: 
+  news:
+    driver: bridge
+
+
+

@@ -70,7 +70,7 @@
         const fromDate = moment().format('yyyyMMDD');
         const toDate = moment().subtract(1, 'days').format('yyyyMMDD');
         const res = await fetch(
-          `https://www.googleapis.com/customsearch/v1/?key=${key}&cx=${cx}&q=${query}&start=${startIndex}&sort=date:r:${toDate}:${toDate}`,
+          `https://www.googleapis.com/customsearch/v1/?key=${key}&cx=${cx}&q=${query}&start=${startIndex}&sort=date:r:${toDate}:${fromDate}`,
         )
         const data = await res.json()
         json2csv(data);
