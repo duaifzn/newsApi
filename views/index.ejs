@@ -22,6 +22,7 @@
       const key = '<%=process.env.key %>';
       const cx = '<%=process.env.cx %>';
       const cx2 = '<%=process.env.cx2 %>';
+      const cx3 = '<%=process.env.cx3 %>';
       const sources = {
         'www.gvm.com.tw': '遠見雜誌',
         'news.tvbs.com.tw': 'TVBS新聞網',
@@ -39,6 +40,20 @@
         'newtalk.tw': '新頭殼',
         'tw.news.yahoo.com': 'Yahoo奇摩新聞',
         'www.cna.com.tw': '中央社',
+        'www.gamer.com.tw': '巴哈姆特',
+        'www.aspn.media': 'ASPN',
+        'm.match.net.tw': 'match生活網',
+        'disp.cc': 'BBS',
+        'www.bomb01.com': 'bomb01',
+        'cnews.com.tw':'匯流新聞網',
+        'www.ctwant.com':'ctwant',
+        'www.dailymotion.com':'dailymotion',
+        'www.dcard.tw':'dcard',
+        'www.youtube.com':'youtube',
+        'rec.org.tw':'eTV傳媒',
+        'zh-tw.facebook.com':'facebook',
+        'fongnews.net':'溏風報',
+        'www.hinet.net':'hinet',
       }
       function json2csv(res) {
         for (const item of res.items) {
@@ -70,7 +85,7 @@
         const fromDate = moment().format('yyyyMMDD');
         const toDate = moment().subtract(1, 'days').format('yyyyMMDD');
         const res = await fetch(
-          `https://www.googleapis.com/customsearch/v1/?key=${key}&cx=${cx}&q=${query}&start=${startIndex}&sort=date:r:${toDate}:${fromDate}`,
+          `https://www.googleapis.com/customsearch/v1/?key=${key}&cx=${cx}&q=${query}&start=${startIndex}&sort=date:r:${toDate}:${toDate}`,
         )
         const data = await res.json()
         json2csv(data);
@@ -93,6 +108,23 @@
         json2csv(data);
         if (data.queries.nextPage) {
             await search2(data.queries.nextPage[0].startIndex);
+        }
+        else{
+            await search3()
+        }
+        
+      }
+      async function search3(startIndex = 1) {
+        const query = document.getElementById('keyword').value;
+        const fromDate = moment().format('yyyyMMDD');
+        const toDate = moment().subtract(1, 'days').format('yyyyMMDD');
+        const res = await fetch(
+          `https://www.googleapis.com/customsearch/v1/?key=${key}&cx=${cx3}&q=${query}&start=${startIndex}&sort=date:r:${toDate}:${toDate}`,
+        )
+        const data = await res.json()
+        json2csv(data);
+        if (data.queries.nextPage) {
+            await search3(data.queries.nextPage[0].startIndex);
         }
         
       }
