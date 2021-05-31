@@ -1,60 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Custom Search JSON API</title>
-</head>
-<body>
+  </head>
+  <body>
     <h1>Custom Search JSON API</h1>
     <label for="keyword">input keyword:</label>
-    <input type="text" id="keyword" name="keyword"><br><br>
+    <input type="text" id="keyword" name="keyword" /><br /><br />
     <button type="button" onclick="clean()">Clean</button>
-    <button type="button" onclick="search()">Search</button><br><br> 
-    <textarea id="content" rows="10" cols="100"></textarea><br><br>
-    <button type="button" onclick="download()">download csv</button><br><br>
+    <button type="button" onclick="search()">Search</button><br /><br />
+    <textarea id="content" rows="10" cols="100"></textarea><br /><br />
+    <button type="button" onclick="download()">download csv</button><br /><br />
     <div id="link"></div>
+    <script src="./assets/js/moment.js"></script>
     <script>
-    const key = '<%=process.env.key %>'
-    const cx = '<%=process.env.cx %>'      
-        function json2csv(res){
-        for(const item of res.items){
-            content.innerHTML += item.snippet.split('...')[0] + ","
-            content.innerHTML += item.displayLink + ","
-            content.innerHTML += item.htmlTitle.replace("<b>","").replace("</b>","") + ","
-            content.innerHTML += item.link + "\r\n"
+      const key = '<%=process.env.key %>';
+      const cx = '<%=process.env.cx %>';
+      function json2csv(res) {
+        for (const item of res.items) {
+          content.innerHTML += item.snippet.split('...')[0] + ',';
+          content.innerHTML += item.displayLink + ',';
+          content.innerHTML +=
+            item.htmlTitle.replace('<b>', '').replace('</b>', '') + ',';
+          content.innerHTML += item.link + '\r\n';
         }
-        }
-        function download(){
-        let csv = document.getElementById("content").value
+      }
+      function download() {
+        let csv = document.getElementById('content').value;
         let uri = 'data:text/csv;charset=utf-8,\uFEFF' + encodeURI(csv);
-        let link = document.createElement("A")
-        link.href = uri
-        link.download = "test" + ".csv";
-        link.click()
-        }
+        let link = document.createElement('A');
+        link.href = uri;
+        link.download = 'test' + '.csv';
+        link.click();
+      }
 
-        function clean(){
-        let content = document.getElementById("content")
-        content.innerHTML = "時間,來源,標題,連結\r\n"
-        document.getElementById("keyword").value = ''
-        }
+      function clean() {
+        let content = document.getElementById('content');
+        content.innerHTML = '時間,來源,標題,連結\r\n';
+        document.getElementById('keyword').value = '';
+      }
 
-        function search(startIndex = 1, date){
-        let query = document.getElementById("keyword").value
-        fetch(`https://www.googleapis.com/customsearch/v1/?key=${key}&cx=${cx}&q=${query}&start=${startIndex}&sort=date:r:${date}:${date}`)
-            .then(res => res.json())
-            .then(data => {
-                json2csv(data)
-                if(data.queries.nextPage[0].startIndex){
-                if(data.queries.nextPage[0].startIndex < 100)
-                    search(data.queries.nextPage[0].startIndex)
-                else
-                    return  
-                }
-            })
-        }
+      function search(startIndex = 1, date) {
+        const query = document.getElementById('keyword').value;
+        const fromDate = moment().format('yyyyMMDD');
+        const toDate = moment().subtract(1, 'days').format('yyyyMMDD');
+
+        fetch(
+          `https://www.googleapis.com/customsearch/v1/?key=${key}&cx=${cx}&q=${query}&start=${startIndex}&sort=date:r:${toDate}:${fromDate}`,
+        )
+          .then(res => res.json())
+          .then(data => {
+            json2csv(data);
+            if (data.queries.nextPage[0].startIndex) {
+              if (data.queries.nextPage[0].startIndex < 100)
+                search(data.queries.nextPage[0].startIndex);
+              else return;
+            }
+          });
+      }
     </script>
-</body>
+  </body>
 </html>
