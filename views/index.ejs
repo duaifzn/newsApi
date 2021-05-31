@@ -12,17 +12,39 @@
     <input type="text" id="keyword" name="keyword" /><br /><br />
     <button type="button" onclick="clean()">Clean</button>
     <button type="button" onclick="search()">Search</button><br /><br />
-    <textarea id="content" rows="10" cols="100"></textarea><br /><br />
+    <textarea id="content" rows="10" cols="100">
+    </textarea><br /><br />
     <button type="button" onclick="download()">download csv</button><br /><br />
     <div id="link"></div>
     <script src="./assets/js/moment.js"></script>
     <script>
+      clean();
       const key = '<%=process.env.key %>';
       const cx = '<%=process.env.cx %>';
+      const cx2 = '<%=process.env.cx2 %>';
+      const sources = {
+        'www.gvm.com.tw': '遠見雜誌',
+        'news.tvbs.com.tw': 'TVBS新聞網',
+        'www.mirrormedia.mg': '鏡週刊',
+        'www.storm.mg': '風傳媒',
+        'heho.com.tw': 'Heho健康',
+        'money.udn.com': '經濟日報',
+        'www.nownews.com': 'NOWnews今日新聞',
+        'www.chinatimes.com': '中時新聞網',
+        'www.ettoday.net': 'ETtoday新聞雲',
+        'udn.com': '聯合新聞網',
+        'tyenews.com': '桃園電子報',
+        'www.setn.com': '三立新聞網',
+        'www.ltn.com.tw': '自由時報電子報',
+        'newtalk.tw': '新頭殼',
+        'tw.news.yahoo.com': 'Yahoo奇摩新聞',
+        'www.cna.com.tw': '中央社',
+      }
       function json2csv(res) {
         for (const item of res.items) {
-          content.innerHTML += item.snippet.split('...')[0] + ',';
-          content.innerHTML += item.displayLink + ',';
+          content.innerHTML +=  moment().subtract(1, 'days').format('yyyy/MM/DD') + ',';
+          content.innerHTML += sources[item.displayLink]?sources[item.displayLink]:item.displayLink;
+          content.innerHTML += ',';
           content.innerHTML +=
             item.htmlTitle.replace('<b>', '').replace('</b>', '') + ',';
           content.innerHTML += item.link + '\r\n';
@@ -43,23 +65,36 @@
         document.getElementById('keyword').value = '';
       }
 
-      function search(startIndex = 1, date) {
+      async function search(startIndex = 1) {
         const query = document.getElementById('keyword').value;
         const fromDate = moment().format('yyyyMMDD');
         const toDate = moment().subtract(1, 'days').format('yyyyMMDD');
-
-        fetch(
-          `https://www.googleapis.com/customsearch/v1/?key=${key}&cx=${cx}&q=${query}&start=${startIndex}&sort=date:r:${toDate}:${fromDate}`,
+        const res = await fetch(
+          `https://www.googleapis.com/customsearch/v1/?key=${key}&cx=${cx}&q=${query}&start=${startIndex}&sort=date:r:${toDate}:${toDate}`,
         )
-          .then(res => res.json())
-          .then(data => {
-            json2csv(data);
-            if (data.queries.nextPage[0].startIndex) {
-              if (data.queries.nextPage[0].startIndex < 100)
-                search(data.queries.nextPage[0].startIndex);
-              else return;
-            }
-          });
+        const data = await res.json()
+        json2csv(data);
+        if (data.queries.nextPage) {
+            await search(data.queries.nextPage[0].startIndex);
+        }
+        else{
+            await search2()
+        }
+        
+      }
+      async function search2(startIndex = 1) {
+        const query = document.getElementById('keyword').value;
+        const fromDate = moment().format('yyyyMMDD');
+        const toDate = moment().subtract(1, 'days').format('yyyyMMDD');
+        const res = await fetch(
+          `https://www.googleapis.com/customsearch/v1/?key=${key}&cx=${cx2}&q=${query}&start=${startIndex}&sort=date:r:${toDate}:${toDate}`,
+        )
+        const data = await res.json()
+        json2csv(data);
+        if (data.queries.nextPage) {
+            await search2(data.queries.nextPage[0].startIndex);
+        }
+        
       }
     </script>
   </body>
