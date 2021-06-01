@@ -20,12 +20,12 @@
     <script>
       clean();
       const key = '<%=process.env.key %>';
-      const cx = '<%=process.env.cx %>';
-      const cx2 = '<%=process.env.cx2 %>';
-      const cx3 = '<%=process.env.cx3 %>';
-      const cx4 = '<%=process.env.cx4 %>';
-      const cx5 = '<%=process.env.cx5 %>';
-      const cx6 = '<%=process.env.cx6 %>';
+      const searchEngine1 = '<%=process.env.cx %>';
+      const searchEngine2 = '<%=process.env.cx2 %>';
+      const searchEngine3 = '<%=process.env.cx3 %>';
+      const searchEngine4 = '<%=process.env.cx4 %>';
+      const searchEngine5 = '<%=process.env.cx5 %>';
+      const searchEngine6 = '<%=process.env.cx6 %>';
       const sources = {
         'www.gvm.com.tw': '遠見雜誌',
         'news.tvbs.com.tw': 'TVBS新聞網',
@@ -115,7 +115,15 @@
         document.getElementById('keyword').value = '';
       }
 
-      async function search(startIndex = 1) {
+      async function search() {
+        await searchEngine(searchEngine1, 1)
+        await searchEngine(searchEngine2, 1)
+        await searchEngine(searchEngine3, 1)
+        await searchEngine(searchEngine4, 1)
+        await searchEngine(searchEngine5, 1)
+        await searchEngine(searchEngine6, 1)
+      }
+      async function searchEngine(cx, startIndex){
         const query = document.getElementById('keyword').value;
         const fromDate = moment().format('yyyyMMDD');
         const toDate = moment().subtract(1, 'days').format('yyyyMMDD');
@@ -126,99 +134,7 @@
         json2csv(data);
         if(data.queries){
             if (data.queries.nextPage) {
-                await search(data.queries.nextPage[0].startIndex);
-            }
-            else{
-                await search2()
-            }
-        }
-       
-        
-      }
-      async function search2(startIndex = 1) {
-        const query = document.getElementById('keyword').value;
-        const fromDate = moment().format('yyyyMMDD');
-        const toDate = moment().subtract(1, 'days').format('yyyyMMDD');
-        const res = await fetch(
-          `https://www.googleapis.com/customsearch/v1/?key=${key}&cx=${cx2}&q=${query}&start=${startIndex}&sort=date:r:${toDate}:${toDate}`,
-        )
-        const data = await res.json()
-        json2csv(data);
-        if(data.queries){
-            if (data.queries.nextPage) {
-                await search2(data.queries.nextPage[0].startIndex);
-            }
-            else{
-                await search3()
-            }
-        }
-      }
-      async function search3(startIndex = 1) {
-        const query = document.getElementById('keyword').value;
-        const fromDate = moment().format('yyyyMMDD');
-        const toDate = moment().subtract(1, 'days').format('yyyyMMDD');
-        const res = await fetch(
-          `https://www.googleapis.com/customsearch/v1/?key=${key}&cx=${cx3}&q=${query}&start=${startIndex}&sort=date:r:${toDate}:${toDate}`,
-        )
-        const data = await res.json()
-        json2csv(data);
-        if(data.queries){
-            if (data.queries.nextPage) {
-                await search3(data.queries.nextPage[0].startIndex);
-            }
-            else{
-                await search4()
-            }
-        }
-      }
-      async function search4(startIndex = 1) {
-        const query = document.getElementById('keyword').value;
-        const fromDate = moment().format('yyyyMMDD');
-        const toDate = moment().subtract(1, 'days').format('yyyyMMDD');
-        const res = await fetch(
-          `https://www.googleapis.com/customsearch/v1/?key=${key}&cx=${cx4}&q=${query}&start=${startIndex}&sort=date:r:${toDate}:${toDate}`,
-        )
-        const data = await res.json()
-        json2csv(data);
-        if(data.queries){
-            if (data.queries.nextPage) {
-                await search4(data.queries.nextPage[0].startIndex);
-            }
-            else{
-                await search5()
-            }
-        }
-      }
-      async function search5(startIndex = 1) {
-        const query = document.getElementById('keyword').value;
-        const fromDate = moment().format('yyyyMMDD');
-        const toDate = moment().subtract(1, 'days').format('yyyyMMDD');
-        const res = await fetch(
-          `https://www.googleapis.com/customsearch/v1/?key=${key}&cx=${cx5}&q=${query}&start=${startIndex}&sort=date:r:${toDate}:${toDate}`,
-        )
-        const data = await res.json()
-        json2csv(data);
-        if(data.queries){
-            if (data.queries.nextPage) {
-                await search5(data.queries.nextPage[0].startIndex);
-            }
-            else{
-                await search6()
-            }
-        }    
-      }
-      async function search6(startIndex = 1) {
-        const query = document.getElementById('keyword').value;
-        const fromDate = moment().format('yyyyMMDD');
-        const toDate = moment().subtract(1, 'days').format('yyyyMMDD');
-        const res = await fetch(
-          `https://www.googleapis.com/customsearch/v1/?key=${key}&cx=${cx6}&q=${query}&start=${startIndex}&sort=date:r:${toDate}:${toDate}`,
-        )
-        const data = await res.json()
-        json2csv(data);
-        if(data.queries){
-            if (data.queries.nextPage) {
-                await search6(data.queries.nextPage[0].startIndex);
+                await searchEngine(cx, data.queries.nextPage[0].startIndex);
             }
         }
       }
