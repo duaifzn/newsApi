@@ -61,7 +61,7 @@
       }
 
       async function search() {
-        if(document.getElementById('keyword').value == '') {
+        if(document.getElementById('keyword').value.trim() == '') {
             alert('keyword need value!!')
             return
         }
