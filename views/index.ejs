@@ -23,6 +23,9 @@
       const cx = '<%=process.env.cx %>';
       const cx2 = '<%=process.env.cx2 %>';
       const cx3 = '<%=process.env.cx3 %>';
+      const cx4 = '<%=process.env.cx4 %>';
+      const cx5 = '<%=process.env.cx5 %>';
+      const cx6 = '<%=process.env.cx6 %>';
       const sources = {
         'www.gvm.com.tw': '遠見雜誌',
         'news.tvbs.com.tw': 'TVBS新聞網',
@@ -54,6 +57,37 @@
         'zh-tw.facebook.com':'facebook',
         'fongnews.net':'溏風報',
         'www.hinet.net':'hinet',
+        'times.hinet.net': 'Hinet生活誌',
+        'life.tw': 'LIFE',
+        'today.line.me': 'LINE TODAY',
+        'ww2.money-link.com.tw': 'MONEY LINK 富聯網',  
+        'moptt.tw': 'MOPPT鄉公所',
+        'www.msn.com': 'msn新聞',
+        'news.pchome.com.tw': 'PChome新聞',
+        'news.sina.com.tw': 'sina新浪新聞',
+        'www.thenewslens.com': 'The News Lens',
+        'news.tvbs.com.tw': 'TVBS',
+        'tvtw.live': 'TvTw',
+        'yimedia.com.tw': 'YI 毅傳媒',
+        'www.merit-times.com': '人間福報',
+        'www.upmedia.mg': '上報',
+        'www.epochtimes.com': '大紀元',
+        'ctee.com.tw': '工商時報',
+        'www.rti.org.tw': '中央廣播電台',
+        'www.cdns.com.tw': '中華新聞雲',
+        'new.ctv.com.tw': '中視新聞',
+        'www.bcc.com.tw': '中廣新聞網',
+        'www.npa.gov.tw': '內政部警政署',
+        'news.pts.org.tw': '公視新聞網',
+        'daynews.cc': '天天要聞',
+        'www.bastillepost.com': '巴士的報',
+        'www.worldjournal.com': '世界新聞網',
+        'news.ttv.com.tw': '台視新聞網',
+        'www.taiwanjustice.net':  '台灣公義報',
+        'www.taiwanhot.net': '台灣好新聞',
+        'www.tssdnews.com.tw': '台灣新生報',
+        'www.5ch.com.tw': '台灣新聞網',
+        'www.ftvnews.com.tw/news/detail': '民視新聞網',
       }
       function json2csv(res) {
         for (const item of res.items) {
@@ -126,7 +160,54 @@
         if (data.queries.nextPage) {
             await search3(data.queries.nextPage[0].startIndex);
         }
-        
+        else{
+            await search4()
+        }
+      }
+      async function search4(startIndex = 1) {
+        const query = document.getElementById('keyword').value;
+        const fromDate = moment().format('yyyyMMDD');
+        const toDate = moment().subtract(1, 'days').format('yyyyMMDD');
+        const res = await fetch(
+          `https://www.googleapis.com/customsearch/v1/?key=${key}&cx=${cx4}&q=${query}&start=${startIndex}&sort=date:r:${toDate}:${toDate}`,
+        )
+        const data = await res.json()
+        json2csv(data);
+        if (data.queries.nextPage) {
+            await search4(data.queries.nextPage[0].startIndex);
+        }
+        else{
+            await search5()
+        }
+      }
+      async function search5(startIndex = 1) {
+        const query = document.getElementById('keyword').value;
+        const fromDate = moment().format('yyyyMMDD');
+        const toDate = moment().subtract(1, 'days').format('yyyyMMDD');
+        const res = await fetch(
+          `https://www.googleapis.com/customsearch/v1/?key=${key}&cx=${cx5}&q=${query}&start=${startIndex}&sort=date:r:${toDate}:${toDate}`,
+        )
+        const data = await res.json()
+        json2csv(data);
+        if (data.queries.nextPage) {
+            await search5(data.queries.nextPage[0].startIndex);
+        }
+        else{
+            await search6()
+        }
+      }
+      async function search6(startIndex = 1) {
+        const query = document.getElementById('keyword').value;
+        const fromDate = moment().format('yyyyMMDD');
+        const toDate = moment().subtract(1, 'days').format('yyyyMMDD');
+        const res = await fetch(
+          `https://www.googleapis.com/customsearch/v1/?key=${key}&cx=${cx3}&q=${query}&start=${startIndex}&sort=date:r:${toDate}:${toDate}`,
+        )
+        const data = await res.json()
+        json2csv(data);
+        if (data.queries.nextPage) {
+            await search6(data.queries.nextPage[0].startIndex);
+        }
       }
     </script>
   </body>
