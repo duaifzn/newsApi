@@ -87,7 +87,7 @@
         'www.taiwanhot.net': '台灣好新聞',
         'www.tssdnews.com.tw': '台灣新生報',
         'www.5ch.com.tw': '台灣新聞網',
-        'www.ftvnews.com.tw/news/detail': '民視新聞網',
+        'www.ftvnews.com.tw': '民視新聞網',
       }
       function json2csv(res) {
         for (const item of res.items) {
@@ -201,7 +201,7 @@
         const fromDate = moment().format('yyyyMMDD');
         const toDate = moment().subtract(1, 'days').format('yyyyMMDD');
         const res = await fetch(
-          `https://www.googleapis.com/customsearch/v1/?key=${key}&cx=${cx3}&q=${query}&start=${startIndex}&sort=date:r:${toDate}:${toDate}`,
+          `https://www.googleapis.com/customsearch/v1/?key=${key}&cx=${cx6}&q=${query}&start=${startIndex}&sort=date:r:${toDate}:${toDate}`,
         )
         const data = await res.json()
         json2csv(data);
