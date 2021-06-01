@@ -92,6 +92,8 @@
       function json2csv(res) {
         if(!res.items) return
         for (const item of res.items) {
+          let publishTime = moment(item.pagemap.metatags['article:published_time'], 'YYYY-MM-DD')
+          if(moment().diff(publishTime, 'days') > 0) { continue }
           content.innerHTML +=  moment().subtract(1, 'days').format('yyyy/MM/DD') + ',';
           content.innerHTML += sources[item.displayLink]?sources[item.displayLink]:item.displayLink;
           content.innerHTML += ',';
@@ -101,11 +103,13 @@
         }
       }
       function download() {
+        let title = document.getElementById('keyword').value;
+        const date = moment().format('yyyyMMDD');
         let csv = document.getElementById('content').value;
         let uri = 'data:text/csv;charset=utf-8,\uFEFF' + encodeURI(csv);
         let link = document.createElement('A');
         link.href = uri;
-        link.download = 'test' + '.csv';
+        link.download = date + '_' + title + '.csv';
         link.click();
       }
 
