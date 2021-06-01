@@ -92,7 +92,7 @@
       function json2csv(res) {
         if(!res.items) return
         for (const item of res.items) {
-          let publishTime = moment(item.pagemap.metatags['article:published_time'], 'YYYY-MM-DD')
+          let publishTime = moment(item.pagemap.metatags[0]['article:published_time'], 'YYYY-MM-DD')
           if(moment().diff(publishTime, 'days') > 0) { continue }
           content.innerHTML +=  moment().subtract(1, 'days').format('yyyy/MM/DD') + ',';
           content.innerHTML += sources[item.displayLink]?sources[item.displayLink]:item.displayLink;
