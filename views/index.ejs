@@ -124,12 +124,15 @@
         )
         const data = await res.json()
         json2csv(data);
-        if (data.queries.nextPage) {
-            await search(data.queries.nextPage[0].startIndex);
+        if(data.queries){
+            if (data.queries.nextPage) {
+                await search(data.queries.nextPage[0].startIndex);
+            }
+            else{
+                await search2()
+            }
         }
-        else{
-            await search2()
-        }
+       
         
       }
       async function search2(startIndex = 1) {
@@ -141,13 +144,14 @@
         )
         const data = await res.json()
         json2csv(data);
-        if (data.queries.nextPage) {
-            await search2(data.queries.nextPage[0].startIndex);
+        if(data.queries){
+            if (data.queries.nextPage) {
+                await search2(data.queries.nextPage[0].startIndex);
+            }
+            else{
+                await search3()
+            }
         }
-        else{
-            await search3()
-        }
-        
       }
       async function search3(startIndex = 1) {
         const query = document.getElementById('keyword').value;
@@ -158,11 +162,13 @@
         )
         const data = await res.json()
         json2csv(data);
-        if (data.queries.nextPage) {
-            await search3(data.queries.nextPage[0].startIndex);
-        }
-        else{
-            await search4()
+        if(data.queries){
+            if (data.queries.nextPage) {
+                await search3(data.queries.nextPage[0].startIndex);
+            }
+            else{
+                await search4()
+            }
         }
       }
       async function search4(startIndex = 1) {
@@ -174,11 +180,13 @@
         )
         const data = await res.json()
         json2csv(data);
-        if (data.queries.nextPage) {
-            await search4(data.queries.nextPage[0].startIndex);
-        }
-        else{
-            await search5()
+        if(data.queries){
+            if (data.queries.nextPage) {
+                await search4(data.queries.nextPage[0].startIndex);
+            }
+            else{
+                await search5()
+            }
         }
       }
       async function search5(startIndex = 1) {
@@ -190,12 +198,14 @@
         )
         const data = await res.json()
         json2csv(data);
-        if (data.queries.nextPage) {
-            await search5(data.queries.nextPage[0].startIndex);
-        }
-        else{
-            await search6()
-        }
+        if(data.queries){
+            if (data.queries.nextPage) {
+                await search5(data.queries.nextPage[0].startIndex);
+            }
+            else{
+                await search6()
+            }
+        }    
       }
       async function search6(startIndex = 1) {
         const query = document.getElementById('keyword').value;
@@ -206,8 +216,10 @@
         )
         const data = await res.json()
         json2csv(data);
-        if (data.queries.nextPage) {
-            await search6(data.queries.nextPage[0].startIndex);
+        if(data.queries){
+            if (data.queries.nextPage) {
+                await search6(data.queries.nextPage[0].startIndex);
+            }
         }
       }
     </script>
