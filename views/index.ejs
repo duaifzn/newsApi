@@ -90,6 +90,7 @@
         'www.ftvnews.com.tw': '民視新聞網',
       }
       function json2csv(res) {
+        if(!res.items) return
         for (const item of res.items) {
           content.innerHTML +=  moment().subtract(1, 'days').format('yyyy/MM/DD') + ',';
           content.innerHTML += sources[item.displayLink]?sources[item.displayLink]:item.displayLink;
