@@ -33,6 +33,12 @@
       function json2csv(res) {
         if(!res.items) return
         for (const item of res.items) {
+          try{
+            let temp = item.pagemap.metatags[0]['article:published_time']
+            if(!temp) continue
+          }catch(err){
+            continue
+          }
           let publishTime = moment(item.pagemap.metatags[0]['article:published_time'], 'YYYY-MM-DD')
           if(moment().diff(publishTime, 'days') > 1) { continue }
           content.innerHTML +=  moment().subtract(1, 'days').format('yyyy/MM/DD') + ',';
@@ -80,7 +86,7 @@
         const fromDate = moment().format('yyyyMMDD');
         const toDate = moment().subtract(1, 'days').format('yyyyMMDD');
         const res = await fetch(
-          `https://www.googleapis.com/customsearch/v1/?key=${key}&cx=${cx}&q=${query}&start=${startIndex}&sort=date:r:${toDate}:${toDate}`,
+          `https://www.googleapis.com/customsearch/v1/siterestrict?key=${key}&cx=${cx}&q=${query}&start=${startIndex}&sort=date:r:${toDate}:${toDate}`,
         )
         const data = await res.json()
         json2csv(data);

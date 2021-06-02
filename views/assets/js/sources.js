@@ -12,6 +12,7 @@ const sources = {
     'tyenews.com': '桃園電子報',
     'www.setn.com': '三立新聞網',
     'www.ltn.com.tw': '自由時報電子報',
+    'news.ltn.com.tw': '自由時報電子報',
     'newtalk.tw': '新頭殼',
     'tw.news.yahoo.com': 'Yahoo奇摩新聞',
     'www.cna.com.tw': '中央社',
