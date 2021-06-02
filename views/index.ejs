@@ -20,7 +20,19 @@
     <script src="./assets/js/sources.js"></script>
     <script>
       clean();
-      const key = '<%=process.env.key %>';
+      const keys = [
+        '<%=process.env.key %>',
+        '<%=process.env.key2 %>',
+        '<%=process.env.key3 %>',
+        '<%=process.env.key4 %>',
+        '<%=process.env.key5 %>',
+        '<%=process.env.key6 %>',
+        '<%=process.env.key7 %>',
+        '<%=process.env.key8 %>',
+        '<%=process.env.key9 %>',
+        '<%=process.env.key10 %>',
+      ];
+      let keyIndex = 0;
       const searchEngine1 = '<%=process.env.cx %>';
       const searchEngine2 = '<%=process.env.cx2 %>';
       const searchEngine3 = '<%=process.env.cx3 %>';
@@ -81,12 +93,23 @@
         await searchEngine(searchEngine9, 1)
       }
       async function searchEngine(cx, startIndex){
+        if(keyIndex > keys.length-1) { return } 
         const query = document.getElementById('keyword').value;
         const fromDate = moment().format('yyyyMMDD');
         const toDate = moment().subtract(1, 'days').format('yyyyMMDD');
-        const res = await fetch(
-          `https://www.googleapis.com/customsearch/v1/siterestrict?key=${key}&cx=${cx}&q=${query}&start=${startIndex}&sort=date:r:${toDate}:${toDate}`,
+        let res = await fetch(
+          `https://www.googleapis.com/customsearch/v1/siterestrict?key=${keys[keyIndex]}&cx=${cx}&q=${query}&start=${startIndex}&sort=date:r:${toDate}:${toDate}`,
         )
+        while(res.status == 429){
+          keyIndex++
+          if(keyIndex > keys.length-1) {
+            alert('429 error! too many requests per day')
+            return
+          } 
+          res = await fetch(
+            `https://www.googleapis.com/customsearch/v1/siterestrict?key=${keys[keyIndex]}&cx=${cx}&q=${query}&start=${startIndex}&sort=date:r:${toDate}:${toDate}`,
+          )
+        }
         const data = await res.json()
         json2csv(data);
         if(data.queries){
