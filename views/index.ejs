@@ -35,7 +35,6 @@
         for (const item of res.items) {
           try{
             let temp = item.pagemap.metatags[0]['article:published_time']
-            if(!temp) continue
           }catch(err){
             continue
           }
