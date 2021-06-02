@@ -33,15 +33,7 @@
         '<%=process.env.key10 %>',
       ];
       let keyIndex = 0;
-      const searchEngine1 = '<%=process.env.cx %>';
-      const searchEngine2 = '<%=process.env.cx2 %>';
-      const searchEngine3 = '<%=process.env.cx3 %>';
-      const searchEngine4 = '<%=process.env.cx4 %>';
-      const searchEngine5 = '<%=process.env.cx5 %>';
-      const searchEngine6 = '<%=process.env.cx6 %>';
-      const searchEngine7 = '<%=process.env.cx7 %>';
-      const searchEngine8 = '<%=process.env.cx8 %>';
-      const searchEngine9 = '<%=process.env.cx9 %>';
+      const searchEngineId = '<%=process.env.cx %>';
       function json2csv(res) {
         if(!res.items) return
         for (const item of res.items) {
@@ -82,23 +74,17 @@
             alert('keyword need value!!')
             return
         }
-        await searchEngine(searchEngine1, 1)
-        await searchEngine(searchEngine2, 1)
-        await searchEngine(searchEngine3, 1)
-        await searchEngine(searchEngine4, 1)
-        await searchEngine(searchEngine5, 1)
-        await searchEngine(searchEngine6, 1)
-        await searchEngine(searchEngine7, 1)
-        await searchEngine(searchEngine8, 1)
-        await searchEngine(searchEngine9, 1)
+        for await(const url of targetUrls){
+          await searchEngine(searchEngineId, url, 1)
+        }
       }
-      async function searchEngine(cx, startIndex){
+      async function searchEngine(cx, targetUrl, startIndex){
         if(keyIndex > keys.length-1) { return } 
         const query = document.getElementById('keyword').value;
         const fromDate = moment().format('yyyyMMDD');
         const toDate = moment().subtract(1, 'days').format('yyyyMMDD');
         let res = await fetch(
-          `https://www.googleapis.com/customsearch/v1/siterestrict?key=${keys[keyIndex]}&cx=${cx}&q=${query}&start=${startIndex}&sort=date:r:${toDate}:${toDate}`,
+          `https://www.googleapis.com/customsearch/v1/?key=${keys[keyIndex]}&cx=${cx}&siteSearch=${targetUrl}&q=${query}&start=${startIndex}&sort=date:r:${toDate}:${toDate}`,
         )
         while(res.status == 429){
           keyIndex++
@@ -107,14 +93,14 @@
             return
           } 
           res = await fetch(
-            `https://www.googleapis.com/customsearch/v1/siterestrict?key=${keys[keyIndex]}&cx=${cx}&q=${query}&start=${startIndex}&sort=date:r:${toDate}:${toDate}`,
+            `https://www.googleapis.com/customsearch/v1/?key=${keys[keyIndex]}&cx=${cx}&siteSearch=${targetUrl}&q=${query}&start=${startIndex}&sort=date:r:${toDate}:${toDate}`,
           )
         }
         const data = await res.json()
         json2csv(data);
         if(data.queries){
             if (data.queries.nextPage) {
-                await searchEngine(cx, data.queries.nextPage[0].startIndex);
+                await searchEngine(cx, targetUrl, data.queries.nextPage[0].startIndex);
             }
         }
       }
