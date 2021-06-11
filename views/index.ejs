@@ -45,6 +45,17 @@
           }catch(err){
             continue
           }
+          //-----------------------
+          const query = document.getElementById('keyword').value;
+          let check = false
+          for(const metatag in item.pagemap.metatags[0]){
+            if(metatag.includes(query)){
+              check = true
+              break
+            }
+          }
+          if(check == false) continue
+          //------------------------
           let publishTime = moment(item.pagemap.metatags[0]['article:published_time'], 'YYYY-MM-DD')
           if(moment().diff(publishTime, 'days') > 1) { continue }
           content.innerHTML +=  moment().subtract(1, 'days').format('yyyy/MM/DD') + ',';
