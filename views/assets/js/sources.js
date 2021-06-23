@@ -83,8 +83,11 @@ const sources = {
     'reader.turnnewsapp.com': '翻報',
     'turnnewsapp.com': '翻報',
     'tw.appledaily.com': '蘋果新聞網',
-    'www.watchmedia01.com': '觀傳媒',  
-
+    'www.watchmedia01.com': '觀傳媒',
+    'twno1.club': '台灣 NO.1',
+    'fun-ty.tw': '桃園Home Run',
+    'inanews.tw': '寶島通訊',
+    'game-4fun.club': 'GAME-4FUN',  
   }
 
   const targetUrls = [
@@ -171,5 +174,9 @@ const sources = {
     'globalnewstv.com.tw',
     'turnnewsapp.com',
     'tw.appledaily.com',
-    'www.watchmedia01.com',  
+    'www.watchmedia01.com',
+    'twno1.club',
+    'fun-ty.tw',
+    'inanews.tw',
+    'game-4fun.club',  
   ]
